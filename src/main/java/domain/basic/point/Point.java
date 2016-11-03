@@ -14,4 +14,8 @@ public class Point {
     public Point(int value) {
         this.value = value;
     }
+
+    public Point plus(Point point) {
+        return new Point(this.value + point.value);
+    }
 }
