@@ -1,6 +1,9 @@
 package domain.member;
 
+import domain.basic.attribute.Attribute;
 import domain.basic.point.Point;
+import domain.basic.type.Grade;
+import domain.basic.type.Type;
 import domain.center_skill.CenterSkill;
 import domain.skill.SkillSlot;
 import lombok.ToString;
@@ -13,15 +16,36 @@ public class Member {
     private final Long id;
     private final Name name;
     private final Ability ability;
+    private final CenterSkill centerSkill;
     private SkillSlot skillSlot;
-    private CenterSkill centerSkill;
     private PointSet pointSet = new PointSet();
-    private TypeSet typeSet;
+    private TypeSet typeSet = new TypeSet();
 
-    public Member(Long id, Name name, Ability ability) {
+    public Member(Long id, Name name, Ability ability, CenterSkill centerSkill) {
         this.id = id;
         this.name = name;
         this.ability = ability;
+        this.centerSkill = centerSkill;
+    }
+
+    void set(Attribute attribute, Point point) {
+        this.pointSet.set(attribute, point);
+    }
+
+    public Point get(Attribute attribute) {
+        return this.pointSet.get(attribute);
+    }
+
+    void setGrade(Grade grade) {
+        this.typeSet.setGrade(grade);
+    }
+
+    PointSet applyCenterSkill(PointSet summarizedPointSet) {
+        return this.centerSkill.resolveMainBonus(summarizedPointSet);
+    }
+
+    public PointSet applyTypeBonus(Member member) {
+        return this.centerSkill.resolveTypeBonus(member);
     }
 
     @Override
@@ -34,27 +58,11 @@ public class Member {
         return this.id.hashCode();
     }
 
-    void setSmilePoint(Point point) {
-        this.pointSet.setSmile(point);
+    public PointSet getPointSet() {
+        return this.pointSet;
     }
 
-    void setPurePoint(Point point) {
-        this.pointSet.setPure(point);
-    }
-
-    void setCoolPoint(Point point) {
-        this.pointSet.setCool(point);
-    }
-
-    Point getSmilePoint() {
-        return this.pointSet.getSmile();
-    }
-
-    Point getPurePoint() {
-        return this.pointSet.getPure();
-    }
-
-    Point getCoolPoint() {
-        return this.pointSet.getCool();
+    public boolean matches(Type type) {
+        return this.typeSet.matches(type);
     }
 }

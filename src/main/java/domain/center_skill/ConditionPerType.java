@@ -1,10 +1,13 @@
 package domain.center_skill;
 
+import domain.basic.attribute.Attribute;
+import domain.basic.point.Point;
 import domain.basic.point.RateOfIncrease;
 import domain.basic.type.BelongingGroup;
 import domain.basic.type.BelongingUnit;
 import domain.basic.type.Grade;
 import domain.basic.type.Type;
+import domain.member.Member;
 import lombok.ToString;
 
 /**
@@ -37,5 +40,13 @@ public class ConditionPerType {
     private ConditionPerType(Type targetType, RateOfIncrease rateOfIncrease) {
         this.targetType = targetType;
         this.rateOfIncrease = rateOfIncrease;
+    }
+
+    public Point getBonusPoint(Member member, Attribute targetAttribute) {
+        if (!member.matches(this.targetType)) {
+            return Point.ZERO;
+        }
+
+        return member.get(targetAttribute).multiply(this.rateOfIncrease);
     }
 }

@@ -18,6 +18,6 @@ public class Perfume extends IndividualAmountingSkill {
     public static final Perfume PURE = new Perfume(Attribute.PURE);
 
     private Perfume(Attribute attribute) {
-        super(new Cost(2), attribute, new AmountOfIncrease(new Point(450)));
+        super(new Cost(2), attribute, new AmountOfIncrease(new Point(attribute, 450)));
     }
 }

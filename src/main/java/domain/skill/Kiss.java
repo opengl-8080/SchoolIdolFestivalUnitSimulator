@@ -18,6 +18,6 @@ public class Kiss extends IndividualAmountingSkill {
     public static final Kiss PURE = new Kiss(Attribute.PURE);
 
     private Kiss(Attribute attribute) {
-        super(new Cost(1), attribute, new AmountOfIncrease(new Point(200)));
+        super(new Cost(1), attribute, new AmountOfIncrease(new Point(attribute, 200)));
     }
 }

@@ -1,7 +1,10 @@
 package domain.center_skill;
 
 import domain.basic.attribute.Attribute;
+import domain.basic.point.Point;
 import domain.basic.point.RateOfIncrease;
+import domain.member.Member;
+import domain.member.PointSet;
 import lombok.ToString;
 
 /**
@@ -9,16 +12,39 @@ import lombok.ToString;
  */
 @ToString
 public class CenterSkill {
+    public static final CenterSkill NONE = new CenterSkill(null, null, null, null);
+
     private final Attribute targetAttribute;
     private final Attribute basicAttribute;
     private final RateOfIncrease rateOfIncrease;
+
     private final ConditionPerType conditionPerType;
+    private final boolean isNull;
 
     private CenterSkill(Attribute targetAttribute, Attribute basicAttribute, RateOfIncrease rateOfIncrease, ConditionPerType conditionPerType) {
         this.targetAttribute = targetAttribute;
         this.basicAttribute = basicAttribute;
         this.rateOfIncrease = rateOfIncrease;
         this.conditionPerType = conditionPerType;
+        this.isNull = this.targetAttribute == null;
+    }
+
+    public PointSet resolveMainBonus(PointSet summarizedPointSet) {
+        if (this.isNull) {
+            return summarizedPointSet;
+        }
+
+        return summarizedPointSet.skillBonus(this.basicAttribute, this.targetAttribute, this.rateOfIncrease);
+    }
+
+    public PointSet resolveTypeBonus(Member member) {
+        if (this.isNull) {
+            return member.getPointSet();
+        }
+
+        Point bonus = this.conditionPerType.getBonusPoint(member, this.targetAttribute);
+
+        return member.getPointSet().plus(this.targetAttribute, bonus);
     }
 
     public static class Cool extends CenterSkill {

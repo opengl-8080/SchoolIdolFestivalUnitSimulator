@@ -14,4 +14,8 @@ public class RateOfIncrease {
     public RateOfIncrease(double percent) {
         this.percent = percent;
     }
+
+    int calcRate(int value) {
+        return (int)((double)value * this.percent / 100.0);
+    }
 }

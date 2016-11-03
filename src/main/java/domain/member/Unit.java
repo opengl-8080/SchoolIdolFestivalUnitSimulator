@@ -1,9 +1,8 @@
 package domain.member;
 
-import domain.basic.point.Point;
 import lombok.ToString;
 import org.eclipse.collections.api.RichIterable;
-import org.eclipse.collections.api.block.function.Function;
+import org.eclipse.collections.api.list.ListIterable;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.factory.Sets;
 
@@ -24,28 +23,21 @@ public class Unit {
         this.members.add(member);
     }
 
-    Point getSmilePoint() {
-        return this.summary(Member::getSmilePoint);
+    PointSet calculatePointSet() {
+        PointSet summarizedPointSet = this.summarize();
+        return this.center.applyCenterSkill(summarizedPointSet).normalize();
     }
 
-    Point getPurePoint() {
-        return this.summary(Member::getPurePoint);
-    }
-
-    Point getCoolPoint() {
-        return this.summary(Member::getCoolPoint);
-    }
-
-    private Point summary(Function<Member, Point> point) {
+    private PointSet summarize() {
         return this.allMembers()
-                .collect(point)
-                .reduce(Point::plus)
-                .orElse(new Point(0));
+                   .collect(this.center::applyTypeBonus)
+                   .reduce(PointSet::plus)
+                   .orElse(PointSet.ZERO);
     }
 
-    private RichIterable<Member> allMembers() {
+    private ListIterable<Member> allMembers() {
         MutableSet<Member> members = Sets.mutable.ofAll(this.members);
         members.add(this.center);
-        return members;
+        return members.toList();
     }
 }
