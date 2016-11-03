@@ -1,0 +1,30 @@
+apply plugin: 'java'
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    provided 
+}
+
+sourceSets {
+    main { compileClasspath += configurations.provided }
+}
+
+dependencies {
+    compile 'org.eclipse.collections:eclipse-collections:8.0.0'
+    compile 'org.apache.commons:commons-lang3:3.5'
+    provided 'org.projectlombok:lombok:1.16.10'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.assertj:assertj-core:3.5.2'
+}
+
+jar {
+    baseName = 'schfes-sim'
+}
